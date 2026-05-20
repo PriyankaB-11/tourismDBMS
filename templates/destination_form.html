@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card p-4">
+    <h2 class="h4 mb-3">{{ 'Edit Destination' if destination else 'Add Destination' }}</h2>
+    <form method="post" enctype="multipart/form-data">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Name</label>
+                <input class="form-control" name="name" placeholder="Destination name" value="{{ destination.name if destination else '' }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Location</label>
+                <input class="form-control" name="location" placeholder="City or region" value="{{ destination.location if destination else '' }}" required>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" name="description" rows="4" placeholder="Short destination description" required>{{ destination.description if destination else '' }}</textarea>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Price</label>
+                <input type="number" step="0.01" class="form-control" name="price" placeholder="0.00" value="{{ destination.price if destination else 0 }}" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Available Slots</label>
+                <input type="number" class="form-control" name="available_slots" placeholder="0" value="{{ destination.available_slots if destination else 0 }}" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Image</label>
+                <input type="file" class="form-control" name="image" accept="image/*" aria-label="Destination image upload">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-4">Save</button>
+    </form>
+</div>
+{% endblock %}

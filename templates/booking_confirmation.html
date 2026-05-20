@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card p-4 text-center">
+    <h2 class="h4 mb-3">Booking Confirmation</h2>
+    <p>Your booking for <strong>{{ destination.name }}</strong> has been submitted.</p>
+    {% if booking %}
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <table class="table">
+                <tr><th>Booking ID</th><td>{{ booking.id }}</td></tr>
+                <tr><th>Travel Date</th><td>{{ booking.travel_date }}</td></tr>
+                <tr><th>Guests</th><td>{{ booking.guests }}</td></tr>
+                <tr><th>Status</th><td>{{ booking.status }}</td></tr>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+    <a href="{{ url_for('booking.bookings') }}" class="btn btn-primary">View Booking History</a>
+</div>
+{% endblock %}

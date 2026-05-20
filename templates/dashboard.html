@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card p-4 mb-4">
+            <h2 class="h4 mb-3">Welcome, {{ session.get('user_name') }}</h2>
+            <p class="text-muted mb-0">Use this dashboard to review your bookings and profile details.</p>
+        </div>
+        <div class="card p-4">
+            <h3 class="h5 mb-3">Recent Bookings</h3>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Destination</th>
+                            <th>Date</th>
+                            <th>Guests</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                        <tr>
+                            <td>{{ booking.destination_name }}</td>
+                            <td>{{ booking.travel_date }}</td>
+                            <td>{{ booking.guests }}</td>
+                            <td><span class="badge text-bg-secondary">{{ booking.status }}</span></td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="4" class="text-muted">No bookings yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card p-4 mb-4">
+            <div class="text-muted">Total Bookings</div>
+            <div class="display-6 fw-bold">{{ booking_count }}</div>
+        </div>
+        <div class="card p-4">
+            <a href="{{ url_for('booking.bookings') }}" class="btn btn-primary w-100 mb-2">View All Bookings</a>
+            <a href="{{ url_for('auth.profile') }}" class="btn btn-outline-primary w-100">Profile</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h4 mb-0">Manage Destinations</h2>
+    <a class="btn btn-primary" href="{{ url_for('destinations.add_destination') }}">Add Destination</a>
+</div>
+<div class="card p-4">
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Price</th>
+                    <th>Slots</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for destination in destinations %}
+                <tr>
+                    <td>{{ destination.name }}</td>
+                    <td>{{ destination.location }}</td>
+                    <td>Rs. {{ '%.2f'|format(destination.price) }}</td>
+                    <td>{{ destination.available_slots }}</td>
+                    <td class="d-flex gap-2">
+                        <a class="btn btn-sm btn-outline-primary" href="{{ url_for('destinations.edit_destination', destination_id=destination.id) }}">Edit</a>
+                        <form method="post" action="{{ url_for('destinations.delete_destination', destination_id=destination.id) }}" onsubmit="return confirm('Delete this destination?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="text-muted">No destinations found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

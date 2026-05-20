@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4 mb-4">
+    <div class="col-md-3"><div class="card p-4"><div class="text-muted">Users</div><div class="h2 mb-0">{{ stats.users }}</div></div></div>
+    <div class="col-md-3"><div class="card p-4"><div class="text-muted">Destinations</div><div class="h2 mb-0">{{ stats.destinations }}</div></div></div>
+    <div class="col-md-3"><div class="card p-4"><div class="text-muted">Bookings</div><div class="h2 mb-0">{{ stats.bookings }}</div></div></div>
+    <div class="col-md-3"><div class="card p-4"><div class="text-muted">Pending</div><div class="h2 mb-0">{{ stats.pending }}</div></div></div>
+</div>
+
+<div class="card p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 mb-0">Recent Bookings</h2>
+        <div class="d-flex gap-2">
+            <a class="btn btn-outline-primary btn-sm" href="{{ url_for('auth.admin_users') }}">Users</a>
+            <a class="btn btn-outline-primary btn-sm" href="{{ url_for('auth.admin_bookings') }}">All Bookings</a>
+            <a class="btn btn-outline-primary btn-sm" href="{{ url_for('auth.admin_destinations') }}">Destinations</a>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Destination</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in recent_bookings %}
+                <tr>
+                    <td>{{ booking.full_name }}</td>
+                    <td>{{ booking.destination_name }}</td>
+                    <td>{{ booking.travel_date }}</td>
+                    <td>{{ booking.status }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="text-muted">No bookings available.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
