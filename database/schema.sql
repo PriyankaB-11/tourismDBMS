@@ -86,7 +86,7 @@ BEGIN
             UPDATE destinations SET available_slots = available_slots - NEW.guests WHERE id = NEW.destination_id;
         END IF;
     -- When moving away from Confirmed, restore previously reserved slots
-    ELSIF OLD.status = 'Confirmed' AND NEW.status <> 'Confirmed' THEN
+    ELSEIF OLD.status = 'Confirmed' AND NEW.status <> 'Confirmed' THEN
         UPDATE destinations SET available_slots = available_slots + OLD.guests WHERE id = OLD.destination_id;
     END IF;
 END$$
