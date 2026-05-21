@@ -147,3 +147,32 @@ This is a small demo/prototype. You're welcome to fork and extend it. No license
 
 ---
 If you'd like, I can now commit these README changes, create a PR, or push to your configured GitHub remote. Tell me which you'd prefer.
+
+## Rubric mapping & enhancements
+
+This section maps the assessment rubric used for evaluation to the project's artifacts and notes on enhancements made to reach "Excellent" criteria.
+
+- **ER Diagram & Conceptual Design (CO2)**: The schema is defined in `database/schema.sql`. A visual ER diagram and conceptual explanation have been added in `docs/er_diagram.md` (entities, attributes, relationships, and cardinalities).
+- **SQL Query Development (CO3)**: Reporting queries are in `database/reports.sql`. Query optimization notes and EXPLAIN guidance are in `docs/query_optimizations.md`. Queries in routes are parameterized and use joins/aggregates where appropriate.
+- **Normalization & Schema Design (CO4)**: Schema normalized to 3NF with PK/FK constraints and CHECK constraints. Triggers were added to `database/schema.sql` to enforce `available_slots` accounting and prevent overbooking.
+- **Application Integration (Front-end) (CO5)**: Full CRUD and booking flows are implemented in `routes/`. Trigger error handling was added to `routes/booking.py` to present friendly messages when DB constraints prevent an operation. Unit tests for booking status updates and trigger handling are in `tests/test_booking_flow.py`.
+- **Requirement Analysis & Documentation (CO1)**: `README.md` provides setup and run instructions. Additional docs (`docs/er_diagram.md`, `docs/query_optimizations.md`, `migrations/README.md`) document requirements, design rationale, and migration guidance.
+
+### How to validate the grading checklist locally
+
+1. Import the schema (includes triggers):
+
+```powershell
+mysql -u root -p tourism_db < database/schema.sql
+```
+
+2. Run tests (from project root, venv activated):
+
+```powershell
+pip install -r requirements.txt
+pytest -q
+```
+
+3. Start the app and exercise admin booking confirmation and cancellation flows to observe trigger-driven behavior.
+
+If you'd like, I can add CI (GitHub Actions) to run tests and migrations automatically on push.

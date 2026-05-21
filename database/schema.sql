@@ -70,3 +70,35 @@ INSERT INTO destinations (name, location, description, price, image_path, availa
 INSERT INTO bookings (user_id, destination_id, travel_date, guests, notes, status) VALUES
 (1, 1, '2026-06-15', 2, 'Window seat if available.', 'Confirmed'),
 (2, 2, '2026-07-10', 4, 'Family trip.', 'Pending');
+
+DELIMITER $$
+
+-- Trigger: Prevent confirming a booking if not enough available slots
+CREATE TRIGGER trg_bookings_before_update
+BEFORE UPDATE ON bookings
+FOR EACH ROW
+BEGIN
+    -- When changing status to Confirmed, ensure destination has enough slots and decrement
+    IF NEW.status = 'Confirmed' AND OLD.status <> 'Confirmed' THEN
+        IF (SELECT available_slots FROM destinations WHERE id = NEW.destination_id) < NEW.guests THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Not enough available slots to confirm booking';
+        ELSE
+            UPDATE destinations SET available_slots = available_slots - NEW.guests WHERE id = NEW.destination_id;
+        END IF;
+    -- When moving away from Confirmed, restore previously reserved slots
+    ELSIF OLD.status = 'Confirmed' AND NEW.status <> 'Confirmed' THEN
+        UPDATE destinations SET available_slots = available_slots + OLD.guests WHERE id = OLD.destination_id;
+    END IF;
+END$$
+
+-- Trigger: If a confirmed booking is deleted, restore slots
+CREATE TRIGGER trg_bookings_before_delete
+BEFORE DELETE ON bookings
+FOR EACH ROW
+BEGIN
+    IF OLD.status = 'Confirmed' THEN
+        UPDATE destinations SET available_slots = available_slots + OLD.guests WHERE id = OLD.destination_id;
+    END IF;
+END$$
+
+DELIMITER ;

@@ -1,4 +1,5 @@
 from flask import Blueprint, flash, redirect, render_template, request, session, url_for
+import mysql.connector
 
 from db import query_db
 from routes.auth import admin_required, login_required
@@ -96,6 +97,16 @@ def update_booking_status(booking_id):
         flash("Invalid booking status.", "danger")
         return redirect(url_for("auth.admin_bookings"))
 
-    query_db("UPDATE bookings SET status = %s WHERE id = %s", (status, booking_id), commit=True)
+    try:
+        query_db("UPDATE bookings SET status = %s WHERE id = %s", (status, booking_id), commit=True)
+    except mysql.connector.Error as exc:
+        # If a trigger raised an error (e.g., not enough slots), show a friendly message
+        msg = str(exc)
+        if 'Not enough available slots' in msg or 'Not enough available slots' in getattr(exc, 'msg', ''):
+            flash('Cannot confirm booking: not enough available slots.', 'danger')
+        else:
+            flash(f'Error updating booking status: {msg}', 'danger')
+        return redirect(url_for("auth.admin_bookings"))
+
     flash("Booking status updated.", "success")
     return redirect(url_for("auth.admin_bookings"))
